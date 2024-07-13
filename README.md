@@ -1,0 +1,1 @@
+This project aims to create a Tic-Tac-Toe game that can be played on browser.
