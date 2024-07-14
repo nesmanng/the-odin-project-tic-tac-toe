@@ -68,6 +68,19 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 4em;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.grid-cell:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+.grid-cell:not(:empty):hover {
+    background-color: white;
+    cursor:default;
 }
 
 .button-container {
@@ -96,10 +109,13 @@ body {
     background-color: var(--toggle-checked-color);
 }
 
+.winning-cell {
+    background-color: #4ade80;
+}
 
 .button-container button {
     padding: 1rem;
-    font-size: 1.5em;
+    font-size: 1.2em;
     margin: 1rem;
     background-color: #f87171;
     cursor: pointer;
