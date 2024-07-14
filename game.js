@@ -55,17 +55,35 @@ const Game = (() => {
     let players;
     let currentPlayerTurn;
     let gameOver;
+    let isComputerOpponent = false; // Default to multiplayer mode
+
 
     const gameStart = () => {
         players = [
             Player('Player 1', 'X'),
-            Player('Player 2', 'O')
+            Player(isComputerOpponent ? 'Computer' : 'Player 2', 'O')
         ];
         currentPlayerTurn = 0;
         gameOver = false;
         gameBoard.resetBoard();
         gameDisplay.updateBoard();
         gameDisplay.setMessage(`${players[currentPlayerTurn].getName()}'s turn`);
+    };
+
+    const toggleGameMode = (isComputer) => {
+        isComputerOpponent = isComputer;
+        const multiplayerButton = document.getElementById('multiplayer-mode');
+        const computerButton = document.getElementById('computer-mode');
+        
+        if (isComputerOpponent) {
+            multiplayerButton.classList.remove('checked');
+            computerButton.classList.add('checked');
+        } else {
+            multiplayerButton.classList.add('checked');
+            computerButton.classList.remove('checked');
+        }
+        
+        gameStart(); // Restart the game when mode changes
     };
 
     const playerMove = (position) => {
@@ -80,6 +98,26 @@ const Game = (() => {
             } else {
                 currentPlayerTurn = currentPlayerTurn === 0 ? 1 : 0;
                 gameDisplay.setMessage(`${players[currentPlayerTurn].getName()}'s turn`);
+
+                if (isComputerOpponent && currentPlayerTurn === 1) {
+                    setTimeout(computerMove, 500);
+                }
+            }
+        }
+    };
+
+    const computerMove = () => {
+        if (!gameOver) {
+            const availablePositions = gameBoard.getBoard().reduce((acc, cell, index) => {
+                if (cell === '') {
+                    acc.push(index);
+                }
+                return acc;
+            }, []);
+
+            if (availablePositions.length > 0) {
+                const randomPosition = availablePositions[Math.floor(Math.random() * availablePositions.length)];
+                playerMove(randomPosition);
             }
         }
     };
@@ -99,11 +137,31 @@ const Game = (() => {
         return gameBoard.getBoard().every(gridCell => gridCell !== '');
     };
 
-    return { gameStart, playerMove };
+    const getCurrentPlayer = () => currentPlayerTurn;
+    const getIsComputerOpponent = () => isComputerOpponent;
+
+    return { gameStart, playerMove, toggleGameMode, getCurrentPlayer, getIsComputerOpponent};
 })();
 
 // Initialize the game when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
+    const multiplayerButton = document.getElementById('multiplayer-mode');
+    const computerButton = document.getElementById('computer-mode');
+
+    // Set up initial game mode (multiplayer)
+    multiplayerButton.classList.add('checked');
+    computerButton.classList.remove('checked');
+
+    // Start game in multiplayer mode
     Game.gameStart();
+
     document.getElementById('restart-button').addEventListener('click', Game.gameStart);
+
+    multiplayerButton.addEventListener('click', () => {
+        Game.toggleGameMode(false);
+    });
+
+    computerButton.addEventListener('click', () => {
+        Game.toggleGameMode(true);
+    });
 });

@@ -13,7 +13,7 @@ body {
     display: grid;
     width: 1000px;
     height: 100%;
-    grid-template-rows: 15vh 1fr;
+    grid-template-rows: 10vh 1fr;
     padding: 1rem;
     background-color: white;
     margin: 0 auto;
@@ -39,6 +39,8 @@ body {
 
 .game-board-container {
     grid-row: 2 / 3;
+    display: flex;
+    flex-direction: column;
 }
 
 #game-status {
@@ -73,9 +75,32 @@ body {
     justify-content: center;
 }
 
+.game-mode-toggle-container {
+    display: flex;
+    justify-content: center;
+    --toggle-checked-color: blue;
+    --toggle-unchecked-color: grey;
+    --toggle-text-color: white;
+}
+
+.game-mode-toggle-container button {
+    padding: 1rem;
+    font-size: 1em;
+    margin: 1rem;
+    cursor: pointer;
+    background-color: var(--toggle-unchecked-color);
+    color: var(--toggle-text-color);
+}
+
+.game-mode-toggle-container button.checked {
+    background-color: var(--toggle-checked-color);
+}
+
+
 .button-container button {
     padding: 1rem;
     font-size: 1.5em;
     margin: 1rem;
     background-color: #f87171;
+    cursor: pointer;
 }
