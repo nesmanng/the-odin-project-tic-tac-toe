@@ -4,14 +4,16 @@ const gameBoard = (function () {
 
     const getBoard = () => board;
 
-    const playerMove = (position, marker) => {
+    // Place a marker on the gameboard at the specified position
+    const placeMarker = (position, marker) => {
         if (board[position] === '') {
             board[position] = marker;
-            return true;
+            return true; // Move was successful
         }
-        return false;
+        return false; // Move was invalid
     };
 
+    // Remove a marker from the gameboard at the specified position
     const undoMove = (position) => {
         board[position] = '';
     };
@@ -20,10 +22,11 @@ const gameBoard = (function () {
         board = ['', '', '', '', '', '', '', '', ''];
     };
 
-    return { getBoard, playerMove, resetBoard, undoMove };
+    // Return objects containing references to the functions that should be publicly accessible
+    return { getBoard, placeMarker, resetBoard, undoMove };
 })();
 
-// Player
+// Player factory function
 const Player = (name, marker) => {
     const getName = () => name;
     const getMarker = () => marker;
@@ -62,22 +65,24 @@ const Game = (() => {
     let gameOver;
     let isComputerOpponent = false; // Default to multiplayer mode
     let player1Marker = 'X'; // Default marker for player 1
-    let moveHistory = [];
+    let moveHistory = []; // Store the history of moves made in the game
 
 
     const gameStart = () => {
+        // Create two player objects with names and markers using the Player factory function
         players = [
             Player('Player 1', player1Marker),
             Player(isComputerOpponent ? 'Computer' : 'Player 2', player1Marker === 'X' ? 'O' : 'X')
         ];
-        currentPlayerTurn = 0;
+        currentPlayerTurn = 0; // Player 1 starts the game
         gameOver = false;
         moveHistory = [];
-        gameBoard.resetBoard();
+        gameBoard.resetBoard(); 
         gameDisplay.updateBoard();
         gameDisplay.setMessage(`${players[currentPlayerTurn].getName()}'s turn (${players[currentPlayerTurn].getMarker()})`);
     };
 
+    // Toggle between multiplayer and single player mode
     const toggleGameMode = (isComputer) => {
         isComputerOpponent = isComputer;
         const multiplayerButton = document.getElementById('multiplayer-mode');
@@ -96,11 +101,12 @@ const Game = (() => {
 
     const switchMarker = () => {
         player1Marker = player1Marker === 'X' ? 'O' : 'X';
-        gameStart();
+        gameStart(); // Restart the game when marker changes
     };
 
     const playerMove = (position) => {
-        if (!gameOver && gameBoard.playerMove(position, players[currentPlayerTurn].getMarker())) {
+        // Check if the game is over or the grid cell is already occupied
+        if (!gameOver && gameBoard.placeMarker(position, players[currentPlayerTurn].getMarker())) {
             moveHistory.push(position);
             gameDisplay.updateBoard();
             if (checkWin(players[currentPlayerTurn].getMarker())) {
@@ -162,6 +168,7 @@ const Game = (() => {
             [0, 4, 8], [2, 4, 6] // Diagonals
         ];
 
+        // Find a winning combination defined in the winningCombos array
         const winningCombo = winningCombos.find(combination => 
             combination.every(position => gameBoard.getBoard()[position] === marker)
         );

@@ -13,7 +13,7 @@ body {
     display: grid;
     width: 1000px;
     height: 100%;
-    grid-template-rows: 10vh 1fr;
+    grid-template-rows: 10vh 1fr 10vh;
     padding: 1rem;
     background-color: white;
     margin: 0 auto;
@@ -113,10 +113,40 @@ body {
     background-color: #4ade80;
 }
 
+.grid-cell.winning-cell:hover {
+    background-color: #4ade80;
+    cursor: default;
+}
+
 .button-container button {
     padding: 1rem;
     font-size: 1.2em;
     margin: 1rem;
     background-color: #f87171;
     cursor: pointer;
+}
+
+footer {
+    grid-row: 3 / 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    padding: 10px;
+    text-align: center;
+    margin-top: 5px;
+}
+
+  
+footer p {
+    margin: 0; 
+}
+  
+footer a {
+    color: #333;
+}
+  
+footer svg {
+    margin-right: 5px; 
+    margin-left: 5px;
 }
